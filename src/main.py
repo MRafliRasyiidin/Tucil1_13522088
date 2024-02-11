@@ -1,6 +1,7 @@
 import numpy as np
 import time
 import random
+import os
 
 def solve(coordinat, length, vertical):
     if length < buffer_size:
@@ -36,12 +37,22 @@ def compare_sequence(sequence):
             for i in range (len(sequence)):
                 sequence_solution.append(sequence[i])
                 coordinat_solution.append(temp_coordinat[i])
+        elif point == max_point:
+            if len(sequence) < len(sequence_solution):
+                max_point = point
+                sequence_solution = []
+                coordinat_solution = []
+                for i in range (len(sequence)):
+                    sequence_solution.append(sequence[i])
+                    coordinat_solution.append(temp_coordinat[i])
+
             
         count += 1
 
 def check_sequence(sequence):
     global point
     point = 0
+    check2 = False
     for i in range(len(m_sequences)):
         check = False
         if len(sequence) >= len(m_sequences[i][0]):
@@ -59,13 +70,14 @@ def check_sequence(sequence):
                             check = False
                     if check:
                         point += m_sequences[i][1]
+                        check2 = True
                         break
-
-    return check
+    return check2
 
 def save():
     filename = str(input("Masukkan nama file: "))
-    savefile = open(filename, "w")
+    save_path = "../test/" + filename
+    savefile = open(save_path, "w")
     savefile.write(f"{max_point}\n")
     for element in sequence_solution:
         savefile.write(f"{element} ")
@@ -74,7 +86,42 @@ def save():
         savefile.write(f"{element[0]}, {element[1]}\n")
     savefile.close()
     
-    
+def solution_output():
+    print(f"""\n .----------------.  .----------------.  .----------------.  .-----------------. .----------------. 
+| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
+| |  _________   | || |     ____     | || | _____  _____ | || | ____  _____  | || |  ________    | |
+| | |_   ___  |  | || |   .'    `.   | || ||_   _||_   _|| || ||_   \|_   _| | || | |_   ___ `.  | |
+| |   | |_  \_|  | || |  /  .--.  \  | || |  | |    | |  | || |  |   \ | |   | || |   | |   `. \ | |
+| |   |  _|      | || |  | |    | |  | || |  | '    ' |  | || |  | |\ \| |   | || |   | |    | | | |
+| |  _| |_       | || |  \  `--'  /  | || |   \ `--' /   | || | _| |_\   |_  | || |  _| |___.' / | |
+| | |_____|      | || |   `.____.'   | || |    `.__.'    | || ||_____|\____| | || | |________.'  | |
+| |              | || |              | || |              | || |              | || |              | |
+| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
+'----------------'  '----------------'  '----------------'  '----------------'  '----------------'  """)
+    print("\nResult")
+    print(f"Maximum reward: {max_point}")
+    print("Token combination: ", end="")
+    for element in sequence_solution:
+        print(element, end=" ")
+    print()
+    for i in range(len(coordinat_solution)):
+        print(f"({coordinat_solution[i][1]},{coordinat_solution[i][0]})")
+
+def no_solution_output():
+    print(f""" .-----------------. .----------------.  .----------------.     .----------------.  .----------------.  .----------------.  .-----------------. .----------------. 
+| .--------------. || .--------------. || .--------------. |   | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
+| | ____  _____  | || |     ____     | || |  _________   | |   | |  _________   | || |     ____     | || | _____  _____ | || | ____  _____  | || |  ________    | |
+| ||_   \|_   _| | || |   .'    `.   | || | |  _   _  |  | |   | | |_   ___  |  | || |   .'    `.   | || ||_   _||_   _|| || ||_   \|_   _| | || | |_   ___ `.  | |
+| |  |   \ | |   | || |  /  .--.  \  | || | |_/ | | \_|  | |   | |   | |_  \_|  | || |  /  .--.  \  | || |  | |    | |  | || |  |   \ | |   | || |   | |   `. \ | |
+| |  | |\ \| |   | || |  | |    | |  | || |     | |      | |   | |   |  _|      | || |  | |    | |  | || |  | '    ' |  | || |  | |\ \| |   | || |   | |    | | | |
+| | _| |_\   |_  | || |  \  `--'  /  | || |    _| |_     | |   | |  _| |_       | || |  \  `--'  /  | || |   \ `--' /   | || | _| |_\   |_  | || |  _| |___.' / | |
+| ||_____|\____| | || |   `.____.'   | || |   |_____|    | |   | | |_____|      | || |   `.____.'   | || |    `.__.'    | || ||_____|\____| | || | |________.'  | |
+| |              | || |              | || |              | |   | |              | || |              | || |              | || |              | || |              | |
+| '--------------' || '--------------' || '--------------' |   | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
+ '----------------'  '----------------'  '----------------'     '----------------'  '----------------'  '----------------'  '----------------'  '----------------' """)
+    print("\nResult")
+    print("Maximum reward: 0")
+    print("No solution was found!")
 
 count = 0 
 max_point = 0
@@ -83,22 +130,27 @@ coordinat_solution = []
 
 
 
-print("Silakan pilih:")
-print("1. Membaca input dari file txt")
-print("2. Generate random")
-pick = int(input("Pilih: "))
+print("Silakan pilih metode input:")
+print("1. File")
+print("2. CLI")
+pick = int(input(">> "))
 
 if pick == 1:
 
     nama_file = input(str("Masukkan nama file: "))
     path = '../test/' + nama_file
+    while not os.path.exists(path):
+        print("File tidak ditemukan, periksa kembali nama file!\n")
+        nama_file = input(str("Masukkan nama file: "))
+        path = '../test/' + nama_file
+
     fp = open(path, "r")
     start = time.time()
 
     buffer_size = int(fp.readline())    # read buffer size
     temp_line = fp.readline()
     col, row = int(temp_line.split()[0]), int(temp_line.split()[1])
-    m = np.zeros((col,row), dtype=object)
+    m = [[0 for i in range(col)] for j in range(row)]
     for i in range (col):         # read matrix Breach Protocol
         temp_line = fp.readline()
         col = 0
@@ -128,21 +180,19 @@ if pick == 1:
         temp_sequence.pop()
         temp_coordinat.pop()
 
-    print(max_point)
-    for element in sequence_solution:
-        print(element, end=" ")
-    print()
-    for i in range(len(coordinat_solution)):
-        print(f"{coordinat_solution[i][0]}, {coordinat_solution[i][1]}")
-
+    if max_point != 0:
+        solution_output()
+    else:
+        no_solution_output()
+        
     end = time.time()
     td = (end-start)
-    print(f"\n{td:.03f} ms\n")
+    print(f"\n{td*1000:.03f} ms\n")
 
     print("Apakah Anda ingin menyimpan solusi? (y/n)")
     status = False
     while not status:
-        choose = str(input())
+        choose = str(input(">> "))
         if choose == "y":
             save()
             status = True
@@ -167,12 +217,15 @@ elif pick == 2:
     row = int(matrix_size[0])
     col = int(matrix_size[1])
     m = [[random.choice(token_list) for i in range(col)] for j in range(row)]
+    print()
+    print("Matrix:")
     for i in range(row):
         for j in range(col):
             print(m[i][j], end=" ")
         print()
     
     m_sequences = []
+    print("\nSequence:")
     for i in range(number_of_sequence):
         sequence_length = random.randint(2, max_sequence_size)
         sequence = []
@@ -180,7 +233,9 @@ elif pick == 2:
             sequence.append(random.choice(token_list))
         reward = random.randint(0, 100)
         m_sequences.append((sequence, reward))
-    print(m_sequences)
+        for element in m_sequences[i][0]:
+            print(element, end=" ")
+        print(f"({m_sequences[i][1]})")
 
     temp_sequence = []
     temp_coordinat = []
@@ -191,12 +246,11 @@ elif pick == 2:
         solve(i, 1, True)
         temp_sequence.pop()
         temp_coordinat.pop()
-    print(max_point)
-    for element in sequence_solution:
-        print(element, end=" ")
-    print()
-    for i in range(len(coordinat_solution)):
-        print(f"{coordinat_solution[i][0]}, {coordinat_solution[i][1]}")
+
+    if max_point != 0:
+        solution_output()
+    else:
+        no_solution_output()
 
     end = time.time()
     td = (end-start)
