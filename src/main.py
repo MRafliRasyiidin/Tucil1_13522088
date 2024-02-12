@@ -83,6 +83,7 @@ def save():
     savefile.write("\n")
     for element in coordinat_solution:
         savefile.write(f"{element[0]}, {element[1]}\n")
+    print("\nSolusi berhasil disimpan!")
     savefile.close()
     
 def solution_output():
@@ -140,12 +141,13 @@ d8888b. d8888b.  .d88b.  d888888b  .d88b.   .o88b.  .d88b.  db
                                                                     
                                                                     """)
 
-count = 0 
-max_point = 0
-sequence_solution = []
-coordinat_solution = []
+
 programLoop = True
 while programLoop:
+    count = 0 
+    max_point = 0
+    sequence_solution = []
+    coordinat_solution = []
     print()
     printBreachProtocol()
     print("Silakan pilih metode input:")
@@ -189,6 +191,9 @@ while programLoop:
                         if len(word) != 2:
                             print("Error: panjang token pada matriks tidak valid")
                             checkReadedSequence = False
+                        if not word.isalnum():
+                            print("Error: token terdiri dari karakter non alfanumerik")
+                            checkReadedSequence = False
                         m[i][col] = word
                         col += 1
             except:
@@ -208,6 +213,9 @@ while programLoop:
                         for word in temp_line.split():
                             if len(word) != 2:
                                 print("Error: panjang token pada sequence tidak valid")
+                                checkReadedSequence = False
+                            if not word.isalnum():
+                                print("Error: token terdiri dari karakter non alfanumerik")
                                 checkReadedSequence = False
                             sequences.append(word)
                         try:
@@ -267,13 +275,19 @@ while programLoop:
             if len(token_list) != number_of_tokens:
                 print()
                 print("Error: banyak token tidak sesuai")
-                print("Periksa kembali masukkan yang diberikan!")
+                print("Periksa kembali masukan yang diberikan!")
                 continue
             for i in range(number_of_tokens):
+                if not token_list[i].isalnum():
+                    print()
+                    print("Error: token terdiri dari karakter non alfanumerik")
+                    print("Periksa kembali masukan yang diberikan!")
+                    checkReadedSequence = False
+                    break
                 if len(token_list[i]) != 2:
                     print()
                     print("Error: panjang token tidak valid")
-                    print("Periksa kembali masukkan yang diberikan!")
+                    print("Periksa kembali masukan yang diberikan!")
                     checkReadedSequence = False
                     break
             if not checkReadedSequence:
@@ -284,8 +298,8 @@ while programLoop:
             max_sequence_size = int(input("Masukkan panjang maksimal sequence: "))
         except ValueError:
             print()
-            print("Error: masukkan tidak valid")
-            print("Periksa kembali masukkan yang diberikan!")
+            print("Error: masukan tidak valid")
+            print("Periksa kembali masukan yang diberikan!")
             continue
         start = time.time()
 
@@ -346,4 +360,4 @@ while programLoop:
     elif pick == "3":
         programLoop = False
     else:
-        print("Masukkan tidak valid!")
+        print("Masukan tidak valid!")
