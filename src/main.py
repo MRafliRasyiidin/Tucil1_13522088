@@ -1,4 +1,3 @@
-import numpy as np
 import time
 import random
 import os
@@ -75,7 +74,7 @@ def check_sequence(sequence):
     return check2
 
 def save():
-    filename = str(input("Masukkan nama file: "))
+    filename = str(input("Masukkan nama file (contoh: hasil.txt): "))
     save_path = "../test/" + filename
     savefile = open(save_path, "w")
     savefile.write(f"{max_point}\n")
@@ -87,7 +86,7 @@ def save():
     savefile.close()
     
 def solution_output():
-    print(f"""\n .----------------.  .----------------.  .----------------.  .-----------------. .----------------. 
+    print(f""" .----------------.  .----------------.  .----------------.  .-----------------. .----------------. 
 | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
 | |  _________   | || |     ____     | || | _____  _____ | || | ____  _____  | || |  ________    | |
 | | |_   ___  |  | || |   .'    `.   | || ||_   _||_   _|| || ||_   \|_   _| | || | |_   ___ `.  | |
@@ -123,140 +122,228 @@ def no_solution_output():
     print("Maximum reward: 0")
     print("No solution was found!")
 
+def printBreachProtocol():
+    print("""d8888b. d8888b. d88888b  .d8b.   .o88b. db   db                     
+88  `8D 88  `8D 88'     d8' `8b d8P  Y8 88   88                     
+88oooY' 88oobY' 88ooooo 88ooo88 8P      88ooo88                     
+88~~~b. 88`8b   88~~~~~ 88~~~88 8b      88~~~88                     
+88   8D 88 `88. 88.     88   88 Y8b  d8 88   88                     
+Y8888P' 88   YD Y88888P YP   YP  `Y88P' YP   YP                     
+                                                                    
+                                                                    
+d8888b. d8888b.  .d88b.  d888888b  .d88b.   .o88b.  .d88b.  db      
+88  `8D 88  `8D .8P  Y8. `~~88~~' .8P  Y8. d8P  Y8 .8P  Y8. 88      
+88oodD' 88oobY' 88    88    88    88    88 8P      88    88 88      
+88~~~   88`8b   88    88    88    88    88 8b      88    88 88      
+88      88 `88. `8b  d8'    88    `8b  d8' Y8b  d8 `8b  d8' 88booo. 
+88      88   YD  `Y88P'     YP     `Y88P'   `Y88P'  `Y88P'  Y88888P 
+                                                                    
+                                                                    """)
+
 count = 0 
 max_point = 0
 sequence_solution = []
 coordinat_solution = []
-
-
-
-print("Silakan pilih metode input:")
-print("1. File")
-print("2. CLI")
-pick = int(input(">> "))
-
-if pick == 1:
-
-    nama_file = input(str("Masukkan nama file: "))
-    path = '../test/' + nama_file
-    while not os.path.exists(path):
-        print("File tidak ditemukan, periksa kembali nama file!\n")
-        nama_file = input(str("Masukkan nama file: "))
-        path = '../test/' + nama_file
-
-    fp = open(path, "r")
-    start = time.time()
-
-    buffer_size = int(fp.readline())    # read buffer size
-    temp_line = fp.readline()
-    col, row = int(temp_line.split()[0]), int(temp_line.split()[1])
-    m = [[0 for i in range(col)] for j in range(row)]
-    for i in range (col):         # read matrix Breach Protocol
-        temp_line = fp.readline()
-        col = 0
-        for word in temp_line.split():
-            m[i][col] = word
-            col += 1
-
-    num_of_sequences = int(fp.readline().split()[0])    # read the sequence and the reward
-    m_sequences = []
-    for i in range (num_of_sequences):
-        temp_line = fp.readline()
-        sequences = []
-        for word in temp_line.split():
-            sequences.append(word)
-        m_sequences.append((sequences, int(fp.readline())))
-
-    # width = col
-    # height = row
-
-    temp_sequence = []
-    temp_coordinat = []
-
-    for i in range(col):
-        temp_sequence.append(m[0][i])
-        temp_coordinat.append((1, i+1))
-        solve(i, 1, True)
-        temp_sequence.pop()
-        temp_coordinat.pop()
-
-    if max_point != 0:
-        solution_output()
-    else:
-        no_solution_output()
-        
-    end = time.time()
-    td = (end-start)
-    print(f"\n{td*1000:.03f} ms\n")
-
-    print("Apakah Anda ingin menyimpan solusi? (y/n)")
-    status = False
-    while not status:
-        choose = str(input(">> "))
-        if choose == "y":
-            save()
-            status = True
-        elif choose == "n":
-            status = True
-        else:
-            print("Masukkan y atau n saja!")
-
-    fp.close()
-
-elif pick == 2:
-    
-    number_of_tokens = int(input())
-    token_list = str(input()).split()
-    buffer_size = int(input())
-    matrix_size = str(input()).split()
-    number_of_sequence = int(input())
-    max_sequence_size = int(input())
-
-    start = time.time()
-
-    row = int(matrix_size[0])
-    col = int(matrix_size[1])
-    m = [[random.choice(token_list) for i in range(col)] for j in range(row)]
+programLoop = True
+while programLoop:
     print()
-    print("Matrix:")
-    for i in range(row):
-        for j in range(col):
-            print(m[i][j], end=" ")
+    printBreachProtocol()
+    print("Silakan pilih metode input:")
+    print("1. File")
+    print("2. CLI")
+    print("3. Exit program")
+    pick = input(">> ")
+    print()
+
+    if pick == "1":
+        checkError = False
+        checkReadedSequence = True
+        nama_file = input(str("Masukkan nama file: "))
         print()
-    
-    m_sequences = []
-    print("\nSequence:")
-    for i in range(number_of_sequence):
-        sequence_length = random.randint(2, max_sequence_size)
-        sequence = []
-        for j in range(sequence_length):
-            sequence.append(random.choice(token_list))
-        reward = random.randint(0, 100)
-        m_sequences.append((sequence, reward))
-        for element in m_sequences[i][0]:
-            print(element, end=" ")
-        print(f"({m_sequences[i][1]})")
+        path = '../test/' + nama_file
+        while not os.path.exists(path):
+            print("File tidak ditemukan, periksa kembali nama file!\n")
+            nama_file = input(str("Masukkan nama file: "))
+            print()
+            path = '../test/' + nama_file
+        fp = open(path, "r")
+        start = time.time()
+        try:
+            buffer_size = int(fp.readline())    # read buffer size
+        except ValueError:
+            print("Error: Ukuran buffer tidak valid")
+            checkError = True
+        try:
+            temp_line = fp.readline()
+            col, row = int(temp_line.split()[0]), int(temp_line.split()[1])
+            m = [[0 for i in range(col)] for j in range(row)]
+        except ValueError:
+            print("Error: Ukuran matriks tidak valid")
+            checkError = True
+        else:
+            try:
+                for i in range (col):         # read Breach Protocol Matrix
+                    temp_line = fp.readline()
+                    col = 0
+                    for word in temp_line.split():
+                        if len(word) != 2:
+                            print("Error: panjang token pada matriks tidak valid")
+                            checkReadedSequence = False
+                        m[i][col] = word
+                        col += 1
+            except:
+                print("Error: Jumlah kolom tidak sesuai")
+                checkError = True
+            else:
+                try:
+                    num_of_sequences = int(fp.readline().split()[0])    # read the sequence and the reward
+                except ValueError:
+                    print("Error: jumlah sequence tidak valid")
+                    checkError = True
+                else:
+                    m_sequences = []
+                    for i in range (num_of_sequences):
+                        temp_line = fp.readline()
+                        sequences = []
+                        for word in temp_line.split():
+                            if len(word) != 2:
+                                print("Error: panjang token pada sequence tidak valid")
+                                checkReadedSequence = False
+                            sequences.append(word)
+                        try:
+                            m_sequences.append((sequences, int(fp.readline())))
+                        except ValueError:
+                            print("Error: nilai reward tidak valid")
+                            checkError = True
+        if not checkError and checkReadedSequence:
+            pass
+        else:
+            print("Silakan periksa kembali file yang akan digunakan!")
+            checkError = False
+            checkReadedSequence = True
+            fp.close()
+            continue
+        # wdth = col
+        # height = row
 
-    temp_sequence = []
-    temp_coordinat = []
+        temp_sequence = []
+        temp_coordinat = []
 
-    for i in range(col):
-        temp_sequence.append(m[0][i])
-        temp_coordinat.append((1, i+1))
-        solve(i, 1, True)
-        temp_sequence.pop()
-        temp_coordinat.pop()
+        for i in range(col):
+            temp_sequence.append(m[0][i])
+            temp_coordinat.append((1, i+1))
+            solve(i, 1, True)
+            temp_sequence.pop()
+            temp_coordinat.pop()
 
-    if max_point != 0:
-        solution_output()
+        if max_point != 0:
+            solution_output()
+        else:
+            no_solution_output()
+
+        end = time.time()
+        td = (end-start)
+        print(f"\n{td*1000:.03f} ms\n")
+
+        print("Apakah Anda ingin menyimpan solusi? (y/n)")
+        status = False
+        while not status:
+            choose = str(input(">> "))
+            if choose == "y":
+                save()
+                status = True
+            elif choose == "n":
+                status = True
+            else:
+                print("Masukkan y atau n saja!")
+
+        fp.close()
+
+    elif pick == "2":
+        checkReadedSequence = True
+        try:
+            number_of_tokens = int(input("Masukkan jumlah token: "))
+            token_list = str(input("Masukkan token dalam 1 baris: ")).split()
+            if len(token_list) != number_of_tokens:
+                print()
+                print("Error: banyak token tidak sesuai")
+                print("Periksa kembali masukkan yang diberikan!")
+                continue
+            for i in range(number_of_tokens):
+                if len(token_list[i]) != 2:
+                    print()
+                    print("Error: panjang token tidak valid")
+                    print("Periksa kembali masukkan yang diberikan!")
+                    checkReadedSequence = False
+                    break
+            if not checkReadedSequence:
+                continue
+            buffer_size = int(input("Masukkan panjang buffer maksimal: "))
+            matrix_size = str(input('Masukkan ukuran matriks dengan format "baris kolom" (contoh: 6 6): ')).split()
+            number_of_sequence = int(input("Masukkan jumlah sequence: "))
+            max_sequence_size = int(input("Masukkan panjang maksimal sequence: "))
+        except ValueError:
+            print()
+            print("Error: masukkan tidak valid")
+            print("Periksa kembali masukkan yang diberikan!")
+            continue
+        start = time.time()
+
+        row = int(matrix_size[0])
+        col = int(matrix_size[1])
+        m = [[random.choice(token_list) for i in range(col)] for j in range(row)]
+        print()
+        print("Matrix:")
+        for i in range(row):
+            for j in range(col):
+                print(m[i][j], end=" ")
+            print()
+
+        m_sequences = []
+        print("\nSequence:")
+        for i in range(number_of_sequence):
+            sequence_length = random.randint(2, max_sequence_size)
+            sequence = []
+            for j in range(sequence_length):
+                sequence.append(random.choice(token_list))
+            reward = random.randint(0, 100)
+            m_sequences.append((sequence, reward))
+            for element in m_sequences[i][0]:
+                print(element, end=" ")
+            print(f"({m_sequences[i][1]})")
+        print()
+        
+        temp_sequence = []
+        temp_coordinat = []
+
+        for i in range(col):
+            temp_sequence.append(m[0][i])
+            temp_coordinat.append((1, i+1))
+            solve(i, 1, True)
+            temp_sequence.pop()
+            temp_coordinat.pop()
+
+        if max_point != 0:
+            solution_output()
+        else:
+            no_solution_output()
+
+        end = time.time()
+        td = (end-start)
+        print(f"\n{td:.03f} ms\n")
+
+        print("Apakah Anda ingin menyimpan solusi? (y/n)")
+        status = False
+        while not status:
+            choose = str(input(">> "))
+            if choose == "y":
+                save()
+                status = True
+            elif choose == "n":
+                status = True
+            else:
+                print("Masukkan y atau n saja!")
+    elif pick == "3":
+        programLoop = False
     else:
-        no_solution_output()
-
-    end = time.time()
-    td = (end-start)
-    print(f"\n{td:.03f} ms\n")
-
-else:
-    print("Masukkan tidak valid!")
-
-
+        print("Masukkan tidak valid!")
