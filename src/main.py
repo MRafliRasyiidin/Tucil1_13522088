@@ -319,6 +319,7 @@ while programLoop:
                 print(m[i][j], end=" ")
             print()
 
+        checkSame = False
         m_sequences = []
         print("\nSequence:")
         for i in range(number_of_sequence):
@@ -327,12 +328,20 @@ while programLoop:
             for j in range(sequence_length):
                 sequence.append(random.choice(token_list))
             reward = random.randint(0, 100)
+            for j in range(len(m_sequences)):
+                if sequence == m_sequences[j][0]:
+                    checkSame = True
+                    break
+            if checkSame:
+                continue
             m_sequences.append((sequence, reward))
             for element in m_sequences[i][0]:
                 print(element, end=" ")
             print(f"({m_sequences[i][1]})")
+        if checkSame:
+            print("\nAda sequence yang tidak unik, sequence telah dihapus dan jumlah sequence telah dikurangi")
         print()
-        
+
         temp_sequence = []
         temp_coordinat = []
 
