@@ -290,6 +290,12 @@ while programLoop:
                     print("Periksa kembali masukan yang diberikan!")
                     checkReadedSequence = False
                     break
+                if len(token_list) != len(set(token_list)):
+                    print()
+                    print("Error: token tidak unik")
+                    print("Periksa kembali masukan yang diberikan!")
+                    checkReadedSequence = False
+                    break
             if not checkReadedSequence:
                 continue
             buffer_size = int(input("Masukkan panjang buffer maksimal: "))
