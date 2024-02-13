@@ -1,6 +1,18 @@
 # Tugas Kecil 1 Strategi Algoritma
 # Breach Protocol Solver
 Sebuah program untuk mencari sekuens optimal dengan hadiah terbesar pada permainan Breach Protocol di Cyberpunk 2077
+# Requirements
+1. Python
+2. Library os-sys, time, random, dan PyInstaller (jika ingin mengompilasi program menjadi executable)
+# Compile
+Berikut merupakan cara untuk mengompilasi program menjadi executable:
+1. Buka folder src pada terminal
+2. Jalankan perintah:
+```
+python -m PyInstaller -F main.py
+```
+3. Tunggu beberapa saat hingga proses selesai
+4. File executable yang telah dibuat dapat diakses pada folder dist
 # How To Use
 Lakukan clone pada repository ini dengan mengetik:
 ```
