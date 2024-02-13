@@ -3,7 +3,7 @@
 Sebuah program untuk mencari sekuens optimal dengan hadiah terbesar pada permainan Breach Protocol di Cyberpunk 2077
 # Requirements
 1. Python
-2. Library os-sys, time, dan random
+2. Library os-sys, time, random, dan PyInstaller (jika ingin mengompilasi program menjadi executable)
 # Compile
 Berikut merupakan cara untuk mengompilasi program menjadi executable:
 1. Buka folder src pada terminal
